@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You are an idiot</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+    video {
+      width: 800px;
+      height: 450px;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    function abrirNuevaVentana() {
+      // Puedes cambiar "tu_video.mp4" con la URL de tu video
+      const videoSource = 'tu_video.mp4';
+
+      // Obtener dimensiones de la ventana principal
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+
+      // Calcular posiciones aleatorias
+      const randomX = Math.floor(Math.random() * (windowWidth - 800)); // 800 is the width of the video
+      const randomY = Math.floor(Math.random() * (windowHeight - 500)); // 500 is the height of the video
+
+      // Intentar abrir una nueva ventana con la URL del video y posición aleatoria
+      const nuevaVentana = window.open('', '_blank', `width=800,height=500,left=${randomX},top=${randomY}`);
+
+      // Comprobar si la ventana emergente se abrió correctamente
+      if (nuevaVentana) {
+        nuevaVentana.document.write(`
+          <html>
+            <head>
+              <title>You are an idiot</title>
+            </head>
+            <body style="margin: 0;">
+              <video autoplay muted>
+                <source src="${videoSource}" type="video/mp4">
+                Tu navegador no soporta la reproducción de video.
+              </video>
+            </body>
+          </html>
+        `);
+      } else {
+        alert('La apertura de ventanas emergentes está bloqueada por el navegador. Por favor, permite las ventanas emergentes e intenta de nuevo.');
+      }
+    }
+
+    // Configurar la repetición automática cada 10 segundos
+    setInterval(abrirNuevaVentana, 1000); // 10000 milisegundos (10 segundos)
+  </script>
+</body>
+</html>
