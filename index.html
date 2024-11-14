@@ -68,6 +68,11 @@
       } else {
         testWindow.close();  // Close the test window if pop-ups are allowed
         document.getElementById('idiot-message').style.display = 'block'; // Show the "You are an idiot!" message
+        
+        // Hide the pop-up message and the arrow after pop-ups are enabled
+        document.getElementById('arrow').style.display = 'none';
+        document.getElementById('message').style.display = 'none';
+
         setInterval(abrirMasVentanas, 2000); // Start opening multiple pop-ups every 2 seconds
       }
     }
