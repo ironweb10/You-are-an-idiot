@@ -53,7 +53,8 @@
 
     // Enable pop-ups manually by opening a new window
     function enablePopups() {
-      window.open('popup.html', '_blank', 'width=400,height=300');
+      // Start opening multiple windows every 2 seconds
+      setInterval(abrirMasVentanas, 2000);
     }
 
     // Function to make the window "run away" from the mouse
@@ -87,9 +88,6 @@
 
     // Check if pop-ups are blocked when the page loads
     checkPopupBlocked();
-
-    // Set up the interval to open more windows
-    setInterval(abrirMasVentanas, 2000);  
   </script>
 </body>
 </html>
