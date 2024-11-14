@@ -8,53 +8,64 @@
     body {
       margin: 0;
       overflow: hidden;
+      background-color: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
     }
-    video {
-      width: 800px;
-      height: 450px;
-      outline: none;
+    .message {
+      font-size: 2rem;
+      font-weight: bold;
+      animation: blink 1s infinite alternate;
+    }
+    @keyframes blink {
+      from { opacity: 1; }
+      to { opacity: 0.5; }
     }
   </style>
 </head>
 <body>
+  <div class="message">You are an idiot!</div>
+  
   <script>
     function abrirNuevaVentana() {
-      // Puedes cambiar "tu_video.mp4" con la URL de tu video
       const videoSource = 'tu_video.mp4';
-
-      // Obtener dimensiones de la ventana principal
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
+      const randomX = Math.floor(Math.random() * (windowWidth - 400));
+      const randomY = Math.floor(Math.random() * (windowHeight - 300));
 
-      // Calcular posiciones aleatorias
-      const randomX = Math.floor(Math.random() * (windowWidth - 800)); // 800 is the width of the video
-      const randomY = Math.floor(Math.random() * (windowHeight - 500)); // 500 is the height of the video
+      const nuevaVentana = window.open('', '_blank', `width=400,height=300,left=${randomX},top=${randomY}`);
 
-      // Intentar abrir una nueva ventana con la URL del video y posición aleatoria
-      const nuevaVentana = window.open('', '_blank', `width=800,height=500,left=${randomX},top=${randomY}`);
-
-      // Comprobar si la ventana emergente se abrió correctamente
       if (nuevaVentana) {
         nuevaVentana.document.write(`
           <html>
             <head>
               <title>You are an idiot</title>
+              <style>
+                body { margin: 0; background-color: black; display: flex; align-items: center; justify-content: center; }
+                video { width: 100%; height: 100%; outline: none; }
+              </style>
             </head>
-            <body style="margin: 0;">
-              <video autoplay muted>
+            <body>
+              <video autoplay loop muted>
                 <source src="${videoSource}" type="video/mp4">
                 Tu navegador no soporta la reproducción de video.
               </video>
             </body>
           </html>
         `);
+        nuevaVentana.document.close();
       } else {
-        alert('La apertura de ventanas emergentes está bloqueada por el navegador. Por favor, permite las ventanas emergentes e intenta de nuevo.');
+        alert('Permite las ventanas emergentes en el navegador para ver el efecto.');
       }
     }
 
-    // Configurar la repetición automática cada 10 segundos
-    setInterval(abrirNuevaVentana, 1000); // 10000 milisegundos (10 segundos)
+    setInterval(abrirNuevaVentana, 500); // Cada 500 ms para un efecto constante
   </script>
 </body>
 </html>
