@@ -31,7 +31,16 @@
   
   <script>
     function abrirVentana() {
-      const nuevaVentana = window.open('popup.html', '_blank', 'width=400,height=300');
+      // Definir un tamaño aleatorio para la ventana
+      const width = 400;
+      const height = 300;
+
+      // Generar una posición aleatoria dentro de las dimensiones de la pantalla
+      const x = Math.floor(Math.random() * (window.innerWidth - width));
+      const y = Math.floor(Math.random() * (window.innerHeight - height));
+
+      // Abrir la ventana con una posición aleatoria
+      const nuevaVentana = window.open('popup.html', '_blank', `width=${width},height=${height},left=${x},top=${y}`);
       if (nuevaVentana) {
         nuevaVentana.blur();
       }
