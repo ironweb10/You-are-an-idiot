@@ -27,10 +27,7 @@
   </style>
 </head>
 <body>
-  <video autoplay loop muted>
-    <source src="tu_video.mp4" type="video/mp4">
-    Tu navegador no soporta la reproducción de video.
-  </video>
+ <div>You are an idiot!</div>
   
   <script>
     // Función para hacer que la ventana "huya" del ratón
@@ -62,8 +59,13 @@
       }
     }
 
-    // Configuración para abrir más ventanas a intervalos
-    setInterval(abrirMasVentanas, 2000);  // Cada 20 segundos
+    // Configuración para abrir más ventanas a intervalos, con un retraso de 2 segundos después de la interacción
+    let abrirVentanasIntervalo;
+    document.addEventListener('mousemove', () => {
+      if (!abrirVentanasIntervalo) {
+        abrirVentanasIntervalo = setInterval(abrirMasVentanas, 20000);  // Abre una ventana cada 20 segundos
+      }
+    });
   </script>
 </body>
 </html>
