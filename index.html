@@ -24,13 +24,39 @@
       from { opacity: 1; }
       to { opacity: 0.3; }
     }
+    #enable-popup-btn {
+      display: none;
+      background-color: yellow;
+      color: black;
+      border: none;
+      padding: 20px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
- <div>You are an idiot!</div>
-  
+  <div>You are an idiot!</div>
+  <button id="enable-popup-btn" onclick="enablePopups()">Enable Pop-ups</button>
+
   <script>
-    // Función para hacer que la ventana "huya" del ratón
+    // Detect if pop-ups are blocked
+    function checkPopupBlocked() {
+      const testWindow = window.open('', '', 'width=1,height=1');
+      if (!testWindow || testWindow.closed) {
+        document.getElementById('enable-popup-btn').style.display = 'block';  // Show the button if pop-ups are blocked
+      } else {
+        testWindow.close();  // Close the test window if pop-ups are allowed
+      }
+    }
+
+    // Enable pop-ups manually by opening a new window
+    function enablePopups() {
+      window.open('popup.html', '_blank', 'width=400,height=300');
+    }
+
+    // Function to make the window "run away" from the mouse
     document.addEventListener('mousemove', (event) => {
       const distancia = 100;
       const ventanaX = window.screenX + window.outerWidth / 2;
@@ -43,29 +69,27 @@
       }
     });
 
-    // Función para abrir más ventanas en posiciones aleatorias
+    // Function to open more windows at random positions
     function abrirMasVentanas() {
       const ventanaAncho = 400;
       const ventanaAlto = 300;
 
-      // Calcular una posición aleatoria en la pantalla
+      // Calculate a random position on the screen
       const nuevaX = Math.floor(Math.random() * (window.screen.availWidth - ventanaAncho));
       const nuevaY = Math.floor(Math.random() * (window.screen.availHeight - ventanaAlto));
 
-      // Abrir la nueva ventana en la posición aleatoria
+      // Open the new window at the random position
       const win = window.open('popup.html', '_blank', `width=${ventanaAncho},height=${ventanaAlto},left=${nuevaX},top=${nuevaY}`);
       if (win) {
         win.blur();
       }
     }
 
-    // Configuración para abrir más ventanas a intervalos, con un retraso de 2 segundos después de la interacción
-    let abrirVentanasIntervalo;
-    document.addEventListener('mousemove', () => {
-      if (!abrirVentanasIntervalo) {
-        abrirVentanasIntervalo = setInterval(abrirMasVentanas, 20000);  // Abre una ventana cada 20 segundos
-      }
-    });
+    // Check if pop-ups are blocked when the page loads
+    checkPopupBlocked();
+
+    // Set up the interval to open more windows
+    setInterval(abrirMasVentanas, 2000);  
   </script>
 </body>
 </html>
