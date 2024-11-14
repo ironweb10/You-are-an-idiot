@@ -40,13 +40,16 @@
       }
     });
 
-    // Configuración para abrir más ventanas
-    setInterval(() => {
+    // Función para abrir más ventanas
+    function abrirMasVentanas() {
       const win = window.open('popup.html', '_blank', 'width=400,height=300');
       if (win) {
         win.blur();
       }
-    }, 2000);
+    }
+
+    // Configuración para abrir más ventanas a intervalos
+    setInterval(abrirMasVentanas, 2000);  // Cada 2 segundos
   </script>
 </body>
 </html>
