@@ -32,14 +32,14 @@
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.95);
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
       z-index: 10000;
     }
-    #popupWarning.show {
-      display: flex;
+    #popupWarning.hide {
+      display: none;
     }
     .warning-content {
       text-align: center;
@@ -114,7 +114,7 @@
   </style>
 </head>
 <body>
-  <video id="mainVideo" autoplay loop muted>
+  <video id="mainVideo" autoplay loop muted style="display: none;">
     <source src="tu_video.mp4" type="video/mp4">
   </video>
 
@@ -124,37 +124,61 @@
       <div class="warning-text">Enable popups to continue</div>
     </div>
     <div class="arrow-container">
-      
       <div class="arrow">➤</div>
       <div class="arrow-text">Allow popups!</div>
     </div>
   </div>
 
   <script>
-    let popupsEnabled = true;
+    let popupsEnabled = false;
     const openWindows = [];
+    let checkingPopups = false;
 
-    function testPopups() {
+    function canOpenPopups() {
+      if (checkingPopups) return false;
+      checkingPopups = true;
+      
       try {
-        const testWindow = window.open('', '_blank', 'width=1,height=1,left=9999,top=9999');
-        if (!testWindow || testWindow.closed || typeof testWindow.closed === 'undefined') {
-          popupsEnabled = false;
-          document.getElementById('popupWarning').classList.add('show');
-          document.getElementById('mainVideo').style.display = 'none';
+        const testWin = window.open('about:blank', '_blank', 'width=1,height=1,left=10000,top=10000');
+        
+        if (!testWin) {
+          checkingPopups = false;
           return false;
-        } else {
-          testWindow.close();
-          popupsEnabled = true;
-          document.getElementById('popupWarning').classList.remove('show');
-          document.getElementById('mainVideo').style.display = 'block';
-          return true;
         }
+        
+        if (testWin.closed) {
+          checkingPopups = false;
+          return false;
+        }
+        
+        if (typeof testWin.closed === 'undefined') {
+          checkingPopups = false;
+          return false;
+        }
+        
+        testWin.close();
+        checkingPopups = false;
+        return true;
       } catch (e) {
-        popupsEnabled = false;
-        document.getElementById('popupWarning').classList.add('show');
-        document.getElementById('mainVideo').style.display = 'none';
+        checkingPopups = false;
         return false;
       }
+    }
+
+    function updatePopupStatus() {
+      const enabled = canOpenPopups();
+      
+      if (enabled && !popupsEnabled) {
+        popupsEnabled = true;
+        document.getElementById('popupWarning').classList.add('hide');
+        document.getElementById('mainVideo').style.display = 'block';
+      } else if (!enabled && popupsEnabled) {
+        popupsEnabled = false;
+        document.getElementById('popupWarning').classList.remove('hide');
+        document.getElementById('mainVideo').style.display = 'none';
+      }
+      
+      return enabled;
     }
 
     function abrirVentanaQueHuye() {
@@ -165,10 +189,16 @@
       const x = Math.floor(Math.random() * (screen.availWidth - width));
       const y = Math.floor(Math.random() * (screen.availHeight - height));
       
-      const nuevaVentana = window.open('popup_flee.html', '_blank', `width=${width},height=${height},left=${x},top=${y},resizable=no`);
-      if (nuevaVentana) {
-        nuevaVentana.blur();
-        openWindows.push(nuevaVentana);
+      try {
+        const nuevaVentana = window.open('popup_flee.html', '_blank', `width=${width},height=${height},left=${x},top=${y},resizable=no`);
+        if (nuevaVentana && !nuevaVentana.closed) {
+          nuevaVentana.blur();
+          openWindows.push(nuevaVentana);
+        } else {
+          updatePopupStatus();
+        }
+      } catch (e) {
+        updatePopupStatus();
       }
     }
 
@@ -180,25 +210,32 @@
       const x = Math.floor(Math.random() * (screen.availWidth - width));
       const y = Math.floor(Math.random() * (screen.availHeight - height));
       
-      const nuevaVentana = window.open('popup_orbit.html', '_blank', `width=${width},height=${height},left=${x},top=${y},resizable=no`);
-      if (nuevaVentana) {
-        nuevaVentana.blur();
-        openWindows.push(nuevaVentana);
+      try {
+        const nuevaVentana = window.open('popup_orbit.html', '_blank', `width=${width},height=${height},left=${x},top=${y},resizable=no`);
+        if (nuevaVentana && !nuevaVentana.closed) {
+          nuevaVentana.blur();
+          openWindows.push(nuevaVentana);
+        } else {
+          updatePopupStatus();
+        }
+      } catch (e) {
+        updatePopupStatus();
       }
     }
 
-    testPopups();
+    updatePopupStatus();
+
+    document.addEventListener('click', updatePopupStatus);
+    document.addEventListener('focus', updatePopupStatus);
 
     setInterval(() => {
-      if (testPopups()) {
-        setTimeout(() => {
-          for (let i = 0; i < 3; i++) {
-            setTimeout(() => abrirVentanaQueHuye(), i * 300);
-          }
-          for (let i = 0; i < 2; i++) {
-            setTimeout(() => abrirVentanaQueRodea(), i * 400);
-          }
-        }, 1000);
+      if (updatePopupStatus()) {
+        for (let i = 0; i < 3; i++) {
+          setTimeout(() => abrirVentanaQueHuye(), i * 300);
+        }
+        for (let i = 0; i < 2; i++) {
+          setTimeout(() => abrirVentanaQueRodea(), i * 400);
+        }
       }
     }, 3000);
 
