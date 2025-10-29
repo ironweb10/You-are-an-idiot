@@ -93,24 +93,6 @@
       0%, 100% { opacity: 1; }
       50% { opacity: 0.5; }
     }
-    .click-here {
-      position: fixed;
-      top: 5px;
-      right: 150px;
-      background: #ff0;
-      color: #000;
-      padding: 10px 20px;
-      border-radius: 50px;
-      font-weight: bold;
-      font-size: 1.1rem;
-      animation: pulse 1s infinite;
-      box-shadow: 0 0 30px #ff0;
-      text-transform: uppercase;
-    }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-    }
   </style>
 </head>
 <body>
@@ -132,41 +114,34 @@
   <script>
     let popupsEnabled = false;
     const openWindows = [];
-    let checkingPopups = false;
+    let userInteracted = false;
 
-    function canOpenPopups() {
-      if (checkingPopups) return false;
-      checkingPopups = true;
-      
+    function testMultiplePopups() {
       try {
-        const testWin = window.open('about:blank', '_blank', 'width=1,height=1,left=10000,top=10000');
+        const win1 = window.open('about:blank', '_blank', 'width=1,height=1,left=10000,top=10000');
+        const win2 = window.open('about:blank', '_blank', 'width=1,height=1,left=10000,top=10000');
         
-        if (!testWin) {
-          checkingPopups = false;
-          return false;
+        let bothOpened = false;
+        
+        if (win1 && win2 && !win1.closed && !win2.closed) {
+          bothOpened = true;
+          win1.close();
+          win2.close();
+        } else {
+          if (win1 && !win1.closed) win1.close();
+          if (win2 && !win2.closed) win2.close();
         }
         
-        if (testWin.closed) {
-          checkingPopups = false;
-          return false;
-        }
-        
-        if (typeof testWin.closed === 'undefined') {
-          checkingPopups = false;
-          return false;
-        }
-        
-        testWin.close();
-        checkingPopups = false;
-        return true;
+        return bothOpened;
       } catch (e) {
-        checkingPopups = false;
         return false;
       }
     }
 
     function updatePopupStatus() {
-      const enabled = canOpenPopups();
+      if (!userInteracted) return false;
+      
+      const enabled = testMultiplePopups();
       
       if (enabled && !popupsEnabled) {
         popupsEnabled = true;
@@ -194,12 +169,8 @@
         if (nuevaVentana && !nuevaVentana.closed) {
           nuevaVentana.blur();
           openWindows.push(nuevaVentana);
-        } else {
-          updatePopupStatus();
         }
-      } catch (e) {
-        updatePopupStatus();
-      }
+      } catch (e) {}
     }
 
     function abrirVentanaQueRodea() {
@@ -215,18 +186,14 @@
         if (nuevaVentana && !nuevaVentana.closed) {
           nuevaVentana.blur();
           openWindows.push(nuevaVentana);
-        } else {
-          updatePopupStatus();
         }
-      } catch (e) {
-        updatePopupStatus();
-      }
+      } catch (e) {}
     }
 
-    updatePopupStatus();
-
-    document.addEventListener('click', updatePopupStatus);
-    document.addEventListener('focus', updatePopupStatus);
+    document.addEventListener('click', () => {
+      userInteracted = true;
+      updatePopupStatus();
+    }, { once: true });
 
     setInterval(() => {
       if (updatePopupStatus()) {
