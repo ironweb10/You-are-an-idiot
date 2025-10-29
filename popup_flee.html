@@ -94,6 +94,60 @@
     document.addEventListener('contextmenu', (e) => e.preventDefault());
 
     updatePosition();
+     function abrirVentanaQueHuye() {
+      if (!popupsEnabled) return;
+      
+      const width = 400;
+      const height = 300;
+      const x = Math.floor(Math.random() * (screen.availWidth - width));
+      const y = Math.floor(Math.random() * (screen.availHeight - height));
+      
+      const nuevaVentana = window.open('popup_flee.html', '_blank', `width=${width},height=${height},left=${x},top=${y},resizable=no`);
+      if (nuevaVentana) {
+        nuevaVentana.blur();
+        openWindows.push(nuevaVentana);
+      }
+    }
+
+    function abrirVentanaQueRodea() {
+      if (!popupsEnabled) return;
+      
+      const width = 300;
+      const height = 250;
+      const x = Math.floor(Math.random() * (screen.availWidth - width));
+      const y = Math.floor(Math.random() * (screen.availHeight - height));
+      
+      const nuevaVentana = window.open('popup_orbit.html', '_blank', `width=${width},height=${height},left=${x},top=${y},resizable=no`);
+      if (nuevaVentana) {
+        nuevaVentana.blur();
+        openWindows.push(nuevaVentana);
+      }
+    }
+
+    testPopups();
+
+    setInterval(() => {
+      if (testPopups()) {
+        setTimeout(() => {
+          for (let i = 0; i < 3; i++) {
+            setTimeout(() => abrirVentanaQueHuye(), i * 300);
+          }
+          for (let i = 0; i < 2; i++) {
+            setTimeout(() => abrirVentanaQueRodea(), i * 400);
+          }
+        }, 1000);
+      }
+    }, 3000);
+
+    setInterval(() => {
+      if (popupsEnabled && openWindows.length < 10) {
+        if (Math.random() > 0.5) {
+          abrirVentanaQueHuye();
+        } else {
+          abrirVentanaQueRodea();
+        }
+      }
+    }, 2500);
   </script>
 </body>
 </html>
