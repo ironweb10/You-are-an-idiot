@@ -135,18 +135,25 @@
     const openWindows = [];
 
     function testPopups() {
-      const testWindow = window.open('', '_blank', 'width=1,height=1');
-      if (!testWindow || testWindow.closed || typeof testWindow.closed === 'undefined') {
+      try {
+        const testWindow = window.open('', '_blank', 'width=1,height=1,left=9999,top=9999');
+        if (!testWindow || testWindow.closed || typeof testWindow.closed === 'undefined') {
+          popupsEnabled = false;
+          document.getElementById('popupWarning').classList.add('show');
+          document.getElementById('mainVideo').style.display = 'none';
+          return false;
+        } else {
+          testWindow.close();
+          popupsEnabled = true;
+          document.getElementById('popupWarning').classList.remove('show');
+          document.getElementById('mainVideo').style.display = 'block';
+          return true;
+        }
+      } catch (e) {
         popupsEnabled = false;
         document.getElementById('popupWarning').classList.add('show');
         document.getElementById('mainVideo').style.display = 'none';
         return false;
-      } else {
-        testWindow.close();
-        popupsEnabled = true;
-        document.getElementById('popupWarning').classList.remove('show');
-        document.getElementById('mainVideo').style.display = 'block';
-        return true;
       }
     }
 
