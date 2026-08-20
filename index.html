@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>You are an idiot!</title>
+  <title>Enable popups to continue</title>
   <style>
     * {
       margin: 0;
@@ -137,24 +137,32 @@
         return false;
       }
     }
-
-    function updatePopupStatus() {
-      if (!userInteracted) return false;
-      
-      const enabled = testMultiplePopups();
-      
-      if (enabled && !popupsEnabled) {
-        popupsEnabled = true;
-        document.getElementById('popupWarning').classList.add('hide');
-        document.getElementById('mainVideo').style.display = 'block';
-      } else if (!enabled && popupsEnabled) {
-        popupsEnabled = false;
-        document.getElementById('popupWarning').classList.remove('hide');
-        document.getElementById('mainVideo').style.display = 'none';
-      }
-      
-      return enabled;
-    }
+function updatePageTitle() {
+  if (popupsEnabled) {
+    document.title = "You are an idiot!";
+  } else {
+    document.title = "Enable popups to continue";
+  }
+}
+   function updatePopupStatus() {
+  if (!userInteracted) return false;
+  
+  const enabled = testMultiplePopups();
+  
+  if (enabled && !popupsEnabled) {
+    popupsEnabled = true;
+    document.getElementById('popupWarning').classList.add('hide');
+    document.getElementById('mainVideo').style.display = 'block';
+    updatePageTitle();
+  } else if (!enabled && popupsEnabled) {
+    popupsEnabled = false;
+    document.getElementById('popupWarning').classList.remove('hide');
+    document.getElementById('mainVideo').style.display = 'none';
+    updatePageTitle();
+  }
+  
+  return enabled;
+}
 
     function getLolHTML() {
       return `<!DOCTYPE html>
